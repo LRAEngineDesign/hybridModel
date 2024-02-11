@@ -6,7 +6,7 @@
 % from Humble section on hybrid regression (page 381): "the boundary layer growth
 % represented by x^m, which causes a decrease in heat flux, is balanced by
 % the increase in G_total from burnt fuel"
-%   x is axial position along the grain (injector side --> postCC)
+% x is axial position along the grain (injector side --> postCC)
 
 
 % initial fuel grain dimensions
