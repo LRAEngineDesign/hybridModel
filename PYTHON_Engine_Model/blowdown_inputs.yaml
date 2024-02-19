@@ -1,0 +1,13 @@
+---
+# Burn Time for the Blowdown model (in future, should be part of main model)
+Burn_Time: 5 # seconds
+dt: 0.1
+
+# Prelim volume of ox tank [m^3]
+Tank_Volume: 055253077
+
+# Targeted absolute temperature of Nitrous [K]
+Initial_Temperature: 293
+
+# Targeted ox tank mass [kg]
+Ox_Mass: 40.04
