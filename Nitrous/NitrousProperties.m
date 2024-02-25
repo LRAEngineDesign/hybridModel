@@ -8,7 +8,7 @@ function [N2O] = NitrousProperties(absTemp)
 %% polynomial expressions for thermodynamic properties
 % constants listed as elements in the matrix
 
-% critical point: temp(K), density (kg/m^3), pressure (kPa)
+% critical point: temp(K), density (kg/m^3), pressure (Pa)
 critPnt = [309.57 452 7251];
 
 % vapor pressure(kPa), density of liquid(kg/m^3), density of vapor(kg/m^3)

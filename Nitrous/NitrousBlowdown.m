@@ -5,23 +5,23 @@
 % and a predetermined mass of oxidizer in the tank
 % Also don't have dimensions for the nitrous tank yet
 
-dt = .01;    % seconds
-tmax = 30;  % seconds
-volTank = 0.055253077; % m^3
+dt = .01;                   % seconds
+tmax = 30;                  % seconds
+volTank = 0.055253077;      % m^3
 initialTemperature = 293;   % K
-totalMass = 40.04;  % kg
-oxFlowRate = 2; % kg/s
+totalMass = 40.04;          % kg
+oxFlowRate = 2;             % kg/s
 
 t = linspace(0, tmax, tmax/dt);
 
 % masses of system: liquid & vapor mass(kg), mass vaporized(kg)
-massLiq = zeros(1, length(t)); % kg
-massVapor = zeros(1, length(t)); % kg
-vaporizedMass = zeros(1, length(t)); % kg
+massLiq = zeros(1, length(t));          % kg
+massVapor = zeros(1, length(t));        % kg
+vaporizedMass = zeros(1, length(t));    % kg
 
 % state of system: ullage(%), temp(K), pressure(kPa)
-ullage = zeros(1, length(t)); % percent
-temp = zeros(1, length(t)); % K
+ullage = zeros(1, length(t));   % percent
+temp = zeros(1, length(t));     % K
 pressure = zeros(1, length(t)); % kPa
 
 % volLG [liquid & vapor volume(m^3)]
@@ -33,7 +33,7 @@ volVapor = zeros(1, length(t));
 % the starting mass of both liquid and vapor based on 
 % Law of Conservation of Mass and Volume
 
-% N2O [liqDensity, vapDensity, vapPressure, hVap, liqSpecHeat, vapSpecHeat]
+% N2O [liqDensity, vapDensity, vapPressure (psi), hVap, liqSpecHeat, vapSpecHeat]
 N2O = NitrousProperties(initialTemperature);
 
 % initial conditions
@@ -74,19 +74,19 @@ end
 figure;
 subplot(221)
 plot(t(1:vaporPhaseTime), pressure(1:vaporPhaseTime))
-xlabel('Time(seconds)')
-ylabel('Pressure(kPa)')
+xlabel('Time (seconds)')
+ylabel('Pressure (psi)')
 title('Pressure Drop of Nitrous Tank')
 
 subplot(222)
 plot(t(1:vaporPhaseTime), temp(1:vaporPhaseTime))
-xlabel('Time(seconds)')
-ylabel('Temperature(K)')
+xlabel('Time (seconds)')
+ylabel('Temperature (K)')
 title('Temperature Drop of Nitrous Tank')
 
 subplot(223)
 plot(t(1:vaporPhaseTime), massLiq(1:vaporPhaseTime), t(1:vaporPhaseTime), massVapor(1:vaporPhaseTime))
-xlabel('Time(seconds)')
-ylabel('Mass(kg)')
+xlabel('Time (seconds)')
+ylabel('Mass (kg)')
 title('Nitrous Mass in Tank')
 legend('Liquid mass','Vapor mass')

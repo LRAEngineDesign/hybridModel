@@ -5,7 +5,7 @@ import yaml
 # Probably dont need a yaml for nitrous coefficients
 #with open('nitrous_coefficients.yaml') as file1:
 #    nitrous = yaml.safe_load(file1)
-blowdown_inputs = "C:/Users/Kyle/OneDrive/Documents/MATLAB/hybridModel/PYTHON_Engine_Model/blowdown_inputs.yaml"
+blowdown_inputs = "C:/hybridModel/PYTHON_Engine_Model/blowdown_inputs.yaml"
 
 with open(blowdown_inputs, 'r') as file2:
         inputs = yaml.safe_load(file2)
@@ -16,16 +16,23 @@ with open(blowdown_inputs, 'r') as file2:
 # Can only model based on temperature (eqns based off temp since using the saturation dome and too complex)
 
 class Blowdown:
-    def __init__(self, abs_temp):
+    def __init__(self, abs_temp, dt):
 
-        self.absTemp = abs_temp
+        # --- Initial Conditions and Initializing State Variables ---
+        self.absTemp = abs_temp # K
+        self.oxFlowRate = 2     # kg/s, constant flow rate for now
+        self.dt = dt            # seconds
+
+        self.volTank = inputs['Tank_Volume']                     # m^3
+        self.initialTemperature = inputs['Initial_Temperature']  # K
+        self.oxMass = inputs['Ox_Mass']                          # kg
 
         # --- Critical Point of Nitrous ---
         self.critTemp = 309.57   # K
         self.critRho = 452       # kg/m^3
         self.critPressure = 7251 # kPa
 
-        # ---------- Polynomial Constants from Paper ----------
+        # --- Polynomial Constants from Paper ---
         self.vapPressure = [-6.7189, 1.35966, -1.3779, -4.051]       # vapor pressure (kPa)
         self.rhoL = [1.72328, -0.83950, 0.51060, -0.10412]           # liquid density (kg/m^3)
         self.rhoV = [-1.009, -6.28792, 7.50332, -7.90463, 0.629427]  # vapor density (kg/m^3)
@@ -36,10 +43,11 @@ class Blowdown:
         self.cL = [2.49973, 0.023454, -3.80136, 13.0945, -14.5180]   # liquid isobaric spec. heat capacity (kJ/kg*K)
         self.cV = [132.632, 0.052187, -0.364923, -1.20233, 0.536141] # vapor isobaric spec. heat capacity (kJ/kg*K)
 
-        # ---------- Property Calculation from White Paper ----------
+    # ---------- Property Calculation from White Paper ----------
     def N2O_Properties(self):
+        # Vapor Pressure (kPa)
         Tr = self.absTemp/self.critTemp
-        self.vaporPressure = self.critTemp*np.exp((1/Tr)*(self.vapPressure[0]*(1-Tr) + self.vapPressure[1]*(1-Tr)**(3/2) + self.vapPressure[2]*(1-Tr)**(5/2) + self.vapPressure[3]*(1-Tr)**5))
+        self.vaporPressure = self.critPressure*np.exp((1/Tr)*(self.vapPressure[0]*(1-Tr) + self.vapPressure[1]*(1-Tr)**(3/2) + self.vapPressure[2]*(1-Tr)**(5/2) + self.vapPressure[3]*(1-Tr)**5))
         self.liquidDensity = self.critRho*np.exp(self.rhoL[0]*(1-Tr)**(1/3) + self.rhoL[1]*(1-Tr)**(2/3) + self.rhoL[2]*(1-Tr) + self.rhoL[3]*(1-Tr)**(4/3))
         self.vaporDensity = self.critRho*np.exp(self.rhoV[0]*(1/Tr-1)**(1/3) + self.rhoV[1]*(1/Tr-1)**(2/3) + self.rhoV[2]*(1/Tr-1) + self.rhoV[3]*(1/Tr-1)**(4/3) + self.rhoV[4]*(1/Tr-1)**(5/3))
         self.hVaporization = (self.hV[0]-self.hL[0]) + (self.hV[1]-self.hL[1])*(1-Tr)**(1/3) + (self.hV[2]-self.hL[2])*(1-Tr)**(2/3) + (self.hV[3]-self.hL[3])*(1-Tr) + (self.hV[4]-self.hL[4])*(1-Tr)**(4/3)
@@ -48,7 +56,7 @@ class Blowdown:
 
         # sanity checking
         print(self.liquidDensity, self.vaporDensity, self.vaporPressure/6.89475, self.hVaporization, self.liquidSpecHeat, self.vaporSpecHeat)
-        print(type('this is working'))
+        print(('this is working'))
     
 
     # ---------- Tank Discharge Calculations ----------
@@ -56,16 +64,12 @@ class Blowdown:
     # Using initial temperature, uses thermodynamic properties at that state to calculate
     # the starting mass of both liquid and vapor based on Law of Conservation of Mass and Volume
 
-    # --- Initial Conditions and Initializing State Variables ---
-
-    # random parameters for now
-    volTank = inputs['Tank_Volume']                     # m^3
-    initialTemperature = inputs['Initial_Temperature']  # K
-    oxMass = inputs['Ox_Mass']                          # kg
-    oxFlowRate = 2                                      # kg/s
+    #def Discharge(self, dt, volTank, initialTemperature, oxMass, oxFlowRate):
+        
 
 
 # sanity checking
-stuff = Blowdown(293)
+stuff = Blowdown(293,0)
 stuff.N2O_Properties()
-print(stuff.critPressure)
+print(stuff.vaporPressure/6.89475)
+
