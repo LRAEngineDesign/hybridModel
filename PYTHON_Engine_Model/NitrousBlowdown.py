@@ -16,12 +16,14 @@ with open(blowdown_inputs, 'r') as file2:
 # Can only model based on temperature (eqns based off temp since using the saturation dome and too complex)
 
 class Blowdown:
-    def __init__(self, abs_temp, dt):
+    def __init__(self, abs_temp, dt, massLiq, massVap):
 
         # --- Initial Conditions and Initializing State Variables ---
         self.absTemp = abs_temp # K
         self.oxFlowRate = 2     # kg/s, constant flow rate for now
         self.dt = dt            # seconds
+        self.massLiq = massLiq  # kg
+        self.massVap = massVap  # kg
 
         self.volTank = inputs['Tank_Volume']                     # m^3
         self.initialTemperature = inputs['Initial_Temperature']  # K
@@ -64,8 +66,10 @@ class Blowdown:
     # Using initial temperature, uses thermodynamic properties at that state to calculate
     # the starting mass of both liquid and vapor based on Law of Conservation of Mass and Volume
 
-    #def Discharge(self, dt, volTank, initialTemperature, oxMass, oxFlowRate):
+    #def Discharge(self):
         
+        
+
 
 
 # sanity checking
